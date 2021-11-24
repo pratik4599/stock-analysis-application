@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'icofile.ico')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+    <title>STOCK ANALYSIS APPLICATION</title>
+</head>
+
+<body>
+
+    <section id="sidebar">
+
+
+
+        <a href="#" class="brand">
+            <span class="text">REALTIME STOCK ANALYSIS</span>
+        </a>
+
+
+
+        <ul class="side-menu top">
+
+            <li class="active">
+                <a href="/index">
+                    <i class='bx bxs-dashboard'></i>
+                   <span class="text">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                
+                    <i class='bx bxs-shopping-bag-alt'></i>
+                    <button type="button" class="btn btn-primary" onclick="api_call_gainers_losers();">gainers_losers</button>
+            </li>
+
+
+            <li>
+                
+                    <i class='bx bxs-shopping-bag-alt'></i>
+                    <button type="button" class="btn btn-primary" onclick="api_call_gap_up_down();">gap_up_down</button>
+            
+            </li>
+
+            <li>
+                
+                    <i class='bx bxs-shopping-bag-alt'></i>
+                    <button type="button" class="btn btn-primary" onclick="api_call_open_high_low();">open_high_low</button>
+                
+            </li>
+
+            <li>
+                
+                    <i class='bx bxs-shopping-bag-alt'></i>
+                    <button type="button" class="btn btn-primary" onclick="api_call_vwap_reversal();">vwap_reversal</button>
+                
+            </li>
+            
+            <li>
+                <a href="/tutorials" target="_blank">
+                    <i class='bx bxs-doughnut-chart'></i>
+                    <span class="text">Tutorials</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="https://github.com/pratik4599/project" target="_blank">
+                    <i class='bx bxs-message-dots'></i>
+                    <span class="text">Source code</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">Team</span>
+                </a>
+            </li>
+        </ul>
+
+
+        <ul class="side-menu">
+
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <!-- <a href="#" class="nav-link">Categories</a> -->
+            <form action="#">
+            </form>
+
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+
+            <!-- part 1 -->
+            <div class="head-title">
+                <div class="left">
+                    <h1>Dashboard</h1>
+                    <ul class="breadcrumb">
+                        <li>
+                            <a href="#">Dashboard</a>
+                        </li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                    </ul>
+                </div>
+            </div>
+
+            
+
+        <div id="table1-div"></div>
+        <div id="table2-div"></div>
+        <div id="table3-div"></div>
+        <div id="table4-div"></div>
+
+
+
+
+        </main>
+    </section>
+
+
+
+    <script>
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        function cont_fetch() {
+            api_call_gainers_losers();
+            setTimeout(cont_fetch, 5000);
+        }
+
+        function api_call_gainers_losers() {
+                $.ajax({
+                    type: "POST",
+                    url: '/gainers_losers',
+                    success: function (data) {
+
+                        let obj = JSON.parse(data)
+                        obj0 = obj[0];
+                        obj1 = obj[1];
+                        // console.log(obj0);
+
+
+                        let tableDiv = document.getElementById("table1-div");
+
+                        let tableRows = "";
+                        Object.keys(obj0).map(key => {
+                            tableRows += `
+                            <tr>
+                            <td><a href="${obj0[key][1]}" target="_blank">${key}</a></td>
+                            <td><h5 style="color: black;">${obj0[key][0]}</h5></td>
+                        
+                            </tr>
+                        `
+                        })
+                        tableDiv.innerHTML = `
+                         <li>
+
+                            <i class='bx bxs-shopping-bag-alt'></i>
+                            <button type="button" class="btn btn-primary" onclick="cont_fetch();">fetch continuously</button>
+                        </li>
+                            <div class="table-data">
+                                <div class="order">
+                                    <div class="head">
+                                        <h3>Gainers</h3>
+                                    </div>
+                            
+                                    <table style="float:left">
+                                        ${tableRows}
+                                    </table>
+                            
+                                </div>
+                            </div>
+                            `
+
+                        let tableDiv2 = document.getElementById("table2-div");
+
+                        let tableRows2 = "";
+                        Object.keys(obj1).map(key => {
+                            tableRows2 += `
+                            <tr>
+                            <td><a href="${obj1[key][1]}" target="_blank">${key}</a></td>
+                            <td><h5 style="color: black;">${obj1[key][0]}</h5></td>
+                        
+                            </tr>
+                        `
+                        })
+                        tableDiv2.innerHTML = `
+                            <div class="table-data">
+                                <div class="order">
+                                    <div class="head">
+                                        <h3>Losers</h3>
+                                    </div>
+
+                                    <table>
+                                        ${tableRows2}
+                                    </table>
+
+                                </div>
+                            </div>
+                            
+                            `
+
+                    }
+                });
+            }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            function api_call_gap_up_down() {
+                    $.ajax({
+                        type: "POST",
+                        url: '/gap_up_down',
+                        success: function (data) {
+
+                            let obj = JSON.parse(data)
+                            obj0 = obj[0];
+                            obj1 = obj[1];
+
+
+                            let tableDiv = document.getElementById("table1-div");
+
+                            let tableRows = "";
+                            Object.keys(obj0).map(key => {
+                                tableRows += `
+                                    <tr>
+                                    <td><a href="${obj0[key][1]}" target="_blank">${key}</a></td>
+                                    <td><h5 style="color: black;">${obj0[key][0]}</h5></td>
+                                
+                                    </tr>
+                                `
+                            })
+                            tableDiv.innerHTML = `
+
+                            
+                            <div class="table-data">
+                                <div class="order">
+                                    <div class="head">
+                                        <h3>Gap up</h3>
+                                    </div>
+
+                                    <table style="float:left">
+                                        ${tableRows}
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            `
+
+
+                            let tableDiv2 = document.getElementById("table2-div");
+
+                            let tableRows2 = "";
+                            Object.keys(obj1).map(key => {
+                                tableRows2 += `
+                    <tr>
+                    <td><a href="${obj1[key][1]}" target="_blank">${key}</a></td>
+                    <td><h5 style="color: black;">${obj1[key][0]}</h5></td>
+                
+                    </tr>
+                `
+                            })
+                            tableDiv2.innerHTML = `
+                            <div class="table-data">
+                                <div class="order">
+                                    <div class="head">
+                                        <h3>Gap down</h3>
+                                    </div>
+
+                                    <table>
+                                        ${tableRows2}
+                                    </table>
+
+                                </div>
+                            </div>
+                    
+                            `
+
+                        }
+                    });
+                }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            
+                    function api_call_open_high_low() {
+                        $.ajax({
+                            type: "POST",
+                            url: '/open_high_low',
+                            success: function (data) {
+
+                                let obj = JSON.parse(data)
+                                obj0 = obj[0];
+                                obj1 = obj[1];
+
+
+                                let tableDiv = document.getElementById("table1-div");
+
+                                let tableRows = "";
+                                Object.keys(obj0).map(key => {
+                                    tableRows += `
+                            <tr>
+                            <td><a href="${obj0[key]}" target="_blank">${key}</a></td>
+                            
+                        
+                            </tr>
+                        `
+                                })
+                                tableDiv.innerHTML = `
+                                <div class="table-data">
+                                    <div class="order">
+                                        <div class="head">
+                                            <h3>open equal to high</h3>
+                                        </div>
+
+                                        <table style="float:left">
+                                            ${tableRows}
+                                        </table>
+
+                                    </div>
+                                </div>
+                            
+                                `
+
+
+
+
+
+                                let tableDiv2 = document.getElementById("table2-div");
+
+                                let tableRows2 = "";
+                                Object.keys(obj1).map(key => {
+                                    tableRows2 += `
+                            <tr>
+                            <td><a href="${obj1[key]}" target="_blank">${key}</a></td>
+                         
+                            </tr>
+                        `
+                                })
+                                tableDiv2.innerHTML = `
+                            <div class="table-data">
+                                <div class="order">
+                                    <div class="head">
+                                        <h3>open equal to low</h3>
+                                    </div>
+
+                                    <table style="float:left">
+                                        ${tableRows2}
+                                    </table>
+
+                                </div>
+                            </div>
+                            `
+
+                            }
+                        });
+                    }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    
+
+            function api_call_vwap_reversal() {
+                $.ajax({
+                    type: "POST",
+                    url: '/vwap_reversal',
+                    success: function (data) {
+
+
+                        let obj = JSON.parse(data)
+                        
+                        obj0 = obj[0];
+                        obj1 = obj[1];
+                        
+
+
+                        let tableDiv = document.getElementById("table1-div");
+
+                        let tableRows = "";
+                        Object.keys(obj0).map(key => {
+                            tableRows += `
+                                <tr>
+                                <td><a href="${obj0[key][1]}" target="_blank">${key}</a></td>
+                                <td><h5 style="color: black;">${obj0[key][0]}</h5></td>
+                            
+                                </tr>
+                            `
+                        })
+                        tableDiv.innerHTML = `
+                        <div class="table-data">
+                                <div class="order">
+                                    <div class="head">
+                                        <h3>above vwap</h3>
+                                    </div>
+
+                                    <table style="float:left">
+                                        ${tableRows}
+                                    </table>
+
+                                </div>
+                            </div>
+                        `
+
+                        let tableDiv2 = document.getElementById("table2-div");
+
+                        let tableRows2 = "";
+                        Object.keys(obj1).map(key => {
+                            tableRows2 += `
+                                <tr>
+                                <td><a href="${obj1[key][1]}" target="_blank">${key}</a></td>
+                                <td><h5 style="color: black;">${obj1[key][0]}</h5></td>
+                            
+                                </tr>
+                            `
+                        })
+                        tableDiv2.innerHTML = `
+                        <div class="table-data">
+                                <div class="order">
+                                    <div class="head">
+                                        <h3>below vwap</h3>
+                                    </div>
+
+                                    <table style="float:left">
+                                        ${tableRows2}
+                                    </table>
+
+                                </div>
+                            </div>
+                        `
+
+                    }
+                });
+            }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    </script>
+
+
+</body>
+
+</html>

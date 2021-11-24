@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'icofile.ico')}}">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>show_images</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .carousel,
+        .item,
+        .active {
+            height: 100%;
+        }
+        .carousel-inner {
+            height: 100%;
+        }
+        .fill {
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
+
+        footer {
+            margin: 50px 0;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="carousel-inner">
+        <div class="item active">
+            
+        <div class="item">
+            <img class="fill" src="../static/1.jpg" alt="error">
+        </div>
+        <br>
+
+        <div class="item">
+            <img class="fill" src="../static/2.jpg" alt="error">
+        </div>
+        <br>
+
+        <div class="item">
+            <img class="fill" src="../static/3.jpg" alt="error">
+        </div>
+        <br>
+        
+    </div>
+
+
+
+    
+</body>
+</html>

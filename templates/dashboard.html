@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APP</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'icofile.ico')}}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <audio src="{{url_for('static',filename='bell.mp3')}}" id="playmusic" filename="bell.mp3" type="audio/mpeg">audio</audio>
+    <audio src="{{url_for('static',filename='insight.mp3')}}" id="playmusic_insight" filename="insight.mp3"
+            type="audio/mpeg">audio</audio>
+
+    <style>
+        body {
+            background-color: #1F2833;
+        }
+        
+        /* *{
+        box-sizing: border-box;
+        }
+
+        .row {
+        display: flex;
+        margin-left:-1px;
+        margin-right:-1px;
+        }
+
+        .column {
+        flex: 1%;
+        padding: 1px;
+        }
+
+        table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 50%;
+        border: 1px solid #ddd;
+        }
+
+        th, td {
+        text-align: left;
+        padding: 1px;
+        } */
+
+
+     
+    </style>
+</head>
+
+<body>    
+
+
+    <button onclick="api_call_gainers_losers();">gainers_losers</button>
+    <button onclick="cont_fetch();">continuous fetch</button>
+    <div id="table1-div"></div>
+    <div id="table2-div"></div>
+
+    <button onclick="api_call_gap_up_down();">gap_up_down</button>
+    <div id="table3-div"></div>
+    <div id="table4-div"></div>
+
+    <button onclick="api_call_vwap_reversal();">vwap_reversal</button>
+    <div id="table7-div"></div>
+    <div id="table8-div"></div>
+
+    <button onclick="api_call_open_high_low();">open_high_low</button>
+    <div id="table5-div"></div>
+    <div id="table6-div"></div>
+    
+
+
+    <script>
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        function cont_fetch() {
+                api_call_gainers_losers();
+                setTimeout(cont_fetch, 5000);
+        }
+
+
+
+        function api_call_gainers_losers() {
+                $.ajax({
+                    type: "POST",
+                    url: '/gainers_losers',
+                    success: function (data) {
+
+
+                        let obj = JSON.parse(data)
+                        // console.log(obj);
+                        // console.log((obj[0]));
+                        obj0 = obj[0];
+                        obj1 = obj[1];
+                        // console.log(obj0);
+                    
+
+                        let tableDiv = document.getElementById("table1-div");
+
+                        let tableRows = "";
+                        Object.keys(obj0).map(key => {
+                            tableRows += `
+                                    <tr>
+                                    <td><a href="${obj0[key][1]}" target="_blank">${key}</a></td>
+                                    <td><h5 style="color: azure;">${obj0[key][0]}</h5></td>
+                                
+                                    </tr>
+                                `
+                        })
+                        tableDiv.innerHTML = `
+                                    <table style="float:left">
+                                        ${tableRows}
+                                    </table>`
+                        
+                        let tableDiv2 = document.getElementById("table2-div");
+
+                        let tableRows2 = "";
+                        Object.keys(obj1).map(key => {
+                            tableRows2 += `
+                                    <tr>
+                                    <td><a href="${obj1[key][1]}" target="_blank">${key}</a></td>
+                                    <td><h5 style="color: azure;">${obj1[key][0]}</h5></td>
+                                
+                                    </tr>
+                                `
+                        })
+                        tableDiv2.innerHTML = `
+                                    <table>
+                                        ${tableRows2}
+                                    </table>`
+
+                    }
+                });
+            }
+
+            function api_call_gap_up_down() {
+                    $.ajax({
+                        type: "POST",
+                        url: '/gap_up_down',
+                        success: function (data) {
+
+                            let obj = JSON.parse(data)                            
+                            obj0 = obj[0];
+                            obj1 = obj[1];
+
+
+                            let tableDiv = document.getElementById("table3-div");
+
+                            let tableRows = "";
+                            Object.keys(obj0).map(key => {
+                                tableRows += `
+                            <tr>
+                            <td><a href="${obj0[key][1]}" target="_blank">${key}</a></td>
+                            <td><h5 style="color: azure;">${obj0[key][0]}</h5></td>
+                        
+                            </tr>
+                        `
+                            })
+                            tableDiv.innerHTML = `
+                            <table style="float:left">
+                                ${tableRows}
+                            </table>`
+
+
+                            let tableDiv2 = document.getElementById("table4-div");
+
+                            let tableRows2 = "";
+                            Object.keys(obj1).map(key => {
+                                tableRows2 += `
+                            <tr>
+                            <td><a href="${obj1[key][1]}" target="_blank">${key}</a></td>
+                            <td><h5 style="color: azure;">${obj1[key][0]}</h5></td>
+                        
+                            </tr>
+                        `
+                            })
+                            tableDiv2.innerHTML = `
+                            <table>
+                                ${tableRows2}
+                            </table>`
+
+                        }
+                    });
+                }
+
+
+    function api_call_open_high_low() {
+        $.ajax({
+            type: "POST",
+            url: '/open_high_low',
+            success: function (data) {
+
+                let obj = JSON.parse(data)
+                obj0 = obj[0];
+                obj1 = obj[1];
+
+
+                let tableDiv = document.getElementById("table5-div");
+
+                let tableRows = "";
+                Object.keys(obj0).map(key => {
+                    tableRows += `
+                            <tr>
+                            <td><a href="${obj0[key]}" target="_blank">${key}</a></td>
+                            
+                        
+                            </tr>
+                        `
+                })
+                tableDiv.innerHTML = `
+                            <table style="float:left">
+                                ${tableRows}
+                            </table>`
+
+
+
+
+
+                let tableDiv2 = document.getElementById("table6-div");
+
+                let tableRows2 = "";
+                Object.keys(obj1).map(key => {
+                    tableRows2 += `
+                            <tr>
+                            <td><a href="${obj1[key]}" target="_blank">${key}</a></td>
+                         
+                            </tr>
+                        `
+                })
+                tableDiv2.innerHTML = `
+                            <table>
+                                ${tableRows2}
+                            </table>`
+
+            }
+        });
+    }
+
+
+
+
+    function api_call_vwap_reversal(){
+        $.ajax({
+            type: "POST",
+            url: '/vwap_reversal',
+            success: function (data) {
+
+
+                let obj = JSON.parse(data)
+                // console.log(obj);
+                // console.log((obj[0]));
+                obj0 = obj[0];
+                obj1 = obj[1];
+                // console.log(obj0);
+
+
+                let tableDiv = document.getElementById("table7-div");
+
+                let tableRows = "";
+                Object.keys(obj0).map(key => {
+                    tableRows += `
+                                    <tr>
+                                    <td><a href="${obj0[key][1]}" target="_blank">${key}</a></td>
+                                    <td><h5 style="color: azure;">${obj0[key][0]}</h5></td>
+                                
+                                    </tr>
+                                `
+                })
+                tableDiv.innerHTML = `
+                                    <table style="float:left">
+                                        ${tableRows}
+                                    </table>`
+
+                let tableDiv2 = document.getElementById("table8-div");
+
+                let tableRows2 = "";
+                Object.keys(obj1).map(key => {
+                    tableRows2 += `
+                                    <tr>
+                                    <td><a href="${obj1[key][1]}" target="_blank">${key}</a></td>
+                                    <td><h5 style="color: azure;">${obj1[key][0]}</h5></td>
+                                
+                                    </tr>
+                                `
+                })
+                tableDiv2.innerHTML = `
+                                    <table>
+                                        ${tableRows2}
+                                    </table>`
+
+            }
+        });
+    }
+    </script>
+
+</body>
+
+</html>

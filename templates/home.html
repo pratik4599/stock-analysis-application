@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APP</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'icofile.ico')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <audio src="{{url_for('static',filename='insight.mp3')}}" id="playmusic" filename="insight.mp3"
+        type="audio/mpeg">audio</audio>
+
+    <style>
+        body {
+            background-color: #DADED4;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <div id="loader" style="display:none;"></div>
+    
+    <div class="everything">
+        <h1>APP</h1>
+        <form id="your-form" action="{{url_for("prev_day")}}" method="post">
+            <input type="text" id="prev_date" name="prev_date" value="1">
+            <input type="text" id="prev_month" name="prev_month" value="10">
+            <input type="text" id="prev_year" name="prev_year" value="2021">
+            <input type="text" id="label_yr_month" name="label_yr_month" value="21OCT">
+            <input type="text" id="level" name="level" value="R3">
+            <input type="text" id="access_token" name="access_token" value="45">
+            <button class="list-group-item list-group-item-action" style="max-width: 200px;" class="btn btn-dark"
+                type="submit">hit me</button>
+        </form>
+
+        <br>
+
+        <button onclick="api_call_access_token();">api call access token</button>
+        <button onclick="api_call_pre_bullish();">api call pre</button>
+        <button onclick="api_call_post_bullish();">api call post</button>
+        <br>
+
+    </div>
+
+
+
+
+
+        
+        <script>
+            
+            $("#your-form").submit(function (e) {
+                    e.preventDefault(); 
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: '/prev_day',
+                        data: $("#your-form").serialize(),
+                        success: function () {
+                            document.getElementById('playmusic').play();
+                            
+                        }
+                    });
+                });
+
+        function api_call_post_bullish(){
+                    $.ajax({
+                    type: "POST",
+                    url: '/post_bullish',
+                    success: function () {
+                            document.getElementById('playmusic').play();
+                    }
+                });
+            }
+
+        function api_call_access_token() {
+            $.ajax({
+                type: "POST",
+                url: '/access_token',
+                success: function () {
+                    document.getElementById('playmusic').play();
+                }
+            });
+        }
+
+        function api_call_pre_bullish() {
+
+                var x = document.getElementById("loader");
+                x.style.display = "block";
+                
+                $.ajax({
+                    type: "POST",
+                    url: '/pre_bullish',
+                    success: function (data) {
+                        document.getElementById('playmusic').play();
+                        var x = document.getElementById("loader");
+                        x.style.display = "none";
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
